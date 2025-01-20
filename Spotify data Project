@@ -40,6 +40,13 @@ time_signature integer NOT NULL
 
 --What is the relationship between the durationn of a track and its popularity? Does a longer duration tend to correlate with higher popularity?
 
+--What makes a track popular?
+To explore what makes a track popular, we would examine the correlation between popularity and other features like energy, danceability and acousticness. This can be achieved by calculating avgs for this features and comparing them against the popularity score.
+
+--Which artists consistently produce popular tracks?
+
+--How do popular tracks differ over time?
+You can analize the data over time(if there's a release_date field or similar) to check for trends in tempo, energy or other features.
 
 
 
