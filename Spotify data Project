@@ -29,24 +29,48 @@ time_signature integer NOT NULL
 #Next, I explored the data using the following SQL. 
 
 --Which artists have the most popular tracks (based on popularity)?
+SELECT artist_name,COUNT(*) AS number_of_tracks, AVG(popularity) AS average_popularity
+FROM Spotifydata
+GROUP BY artist_name
+LIMIT 10;
 
 --What are the most danceable songs and how their energy compares to their danceability? 
-
---Is there a correlation between track energy and popularity? 
+SELECT track_name, artist_name, danceability, energy 
+FROM Spotifydata
+ORDER BY danceability DESC, energy DESC
+LIMIT 10;
 
 --Which tracks have the highest liveness and what is their popularity?
+SELECT track_name, artist_name, liveness, popularity
+FROM Spotifydata
+ORDER BY liveness DESC, popularity DESC
+LIMIT 10;
 
 --What are the top 5 artists with the highest average popularity, and what are teh most popular tracks for each artists?
-
---What is the relationship between the durationn of a track and its popularity? Does a longer duration tend to correlate with higher popularity?
-
---What makes a track popular?
-To explore what makes a track popular, we would examine the correlation between popularity and other features like energy, danceability and acousticness. This can be achieved by calculating avgs for this features and comparing them against the popularity score.
+WITH ArtistAveragePopularity AS (
+    SELECT artist_name, AVG(popularity) AS avg_popularity
+    FROM Spotifydata
+    GROUP BY artist_name
+    ORDER BY avg_popularity DESC
+    LIMIT 5
+)
+SELECT s.artist_name, s.track_name, s.popularity, a.avg_popularity
+FROM Spotifydata s
+JOIN ArtistAveragePopularity a ON s.artist_name = a.artist_name
+WHERE s.popularity = (
+    SELECT MAX(popularity)
+    FROM Spotifydata
+    WHERE artist_name = s.artist_name
+)
+ORDER BY a.avg_popularity DESC, s.popularity DESC;
 
 --Which artists consistently produce popular tracks?
+SELECT artist_name, COUNT(track_name) AS total_tracks, AVG(popularity) AS avg_popularity
+FROM Spotifydata
+GROUP BY artist_name
+HAVING AVG(popularity) >= 80
+ORDER BY avg_popularity DESC, total_tracks DESC;
 
---How do popular tracks differ over time?
-You can analize the data over time(if there's a release_date field or similar) to check for trends in tempo, energy or other features.
 
 
 
